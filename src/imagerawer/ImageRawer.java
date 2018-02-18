@@ -50,13 +50,18 @@ public class ImageRawer {
         System.arraycopy(raw,  l,green,0,l);
         System.arraycopy(raw,2*l,blue ,0,l);
         
-        BufferedImage bi = new BufferedImage(l/w,w,BufferedImage.TYPE_INT_RGB);
+        BufferedImage bi = new BufferedImage(w,l/w,BufferedImage.TYPE_INT_RGB);
         
         for(int y=0;y<bi.getHeight();y++) {
             for(int x=0;x<bi.getWidth();x++) {
                 int col = (red[y*bi.getHeight()+x]<<16) + (green[y*bi.getHeight()+x]<<8) + blue[y*bi.getHeight()+x]; 
                 bi.setRGB(x,y,col);
             }
+        }
+        
+        for(int i=0;i<bi.getWidth()*bi.getHeight();i++) {
+            int col=(red[i]<<16)+(green[i]<<8)+blue[i];
+            bi.setRGB(i%w,i/w,col);
         }
         return bi;
     }
@@ -76,7 +81,7 @@ public class ImageRawer {
         d = in.nextLine();
         if(d.equals("d")) {
             // deraw
-            System.out.print("Enter the height of the image: ");
+            System.out.print("Enter the width of the image: ");
             d = in.nextLine();
             int w = Integer.parseInt(d);
             File f = new File(path);
